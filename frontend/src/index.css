@@ -6,3 +6,7 @@
 .active hr{                /*horizontal lines become visible on click on dashboard*/
     @apply block    
 }
+
+::-webkit-scrollbar{
+    @apply hidden          /*hides the scrollbar & makes it transparent*/
+}
