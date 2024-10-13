@@ -13,7 +13,7 @@ const Navbar = () => {
 
   return (
     <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
-        <img className='w-44 cursor-pointer' src={assets.logo} alt=''/>
+        <img onClick={() => navigate('/')} className='w-44 cursor-pointer' src={assets.logo} alt=''/>
         {/* hidden -> in phone view ul tag will be hidden, md -> in medium deivce ul tag will be visible */}
         <ul className='hidden md:flex items-start gap-5 font-medium'>
             <NavLink to='/'>   {/*after clicking on home link, home page will be shown*/}

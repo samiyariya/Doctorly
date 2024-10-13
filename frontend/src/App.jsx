@@ -9,6 +9,7 @@ import MyProfile from './pages/MyProfile'
 import Login from './pages/Login'
 import { Route, Routes} from 'react-router-dom'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
 const App = () => {
   return (
@@ -18,7 +19,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/doctors' element={<Doctors />} />
-        <Route path='/doctors/:speciatlity' element={<Doctors />} />
+        <Route path='/doctors/:speciality' element={<Doctors />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
@@ -26,7 +27,7 @@ const App = () => {
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/login' element={<Login />} />
       </Routes>
-
+      <Footer />
       
     </div>
   )
