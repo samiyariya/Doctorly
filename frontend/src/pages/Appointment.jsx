@@ -8,7 +8,7 @@ const Appointment = () => {
 
   // storing docid for a particular doctor to show the appointment details
   const { docId } = useParams()
-  const { doctors, currencySympol } = useContext(AppContext)
+  const { doctors, currencySymbol } = useContext(AppContext)
   const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
   // creating state variable to store other info of a doctor
@@ -113,7 +113,7 @@ const Appointment = () => {
             <p className='text-sm text-gray-500 max-w-[700px] mt-1'>{docInfo.about}</p>
           </div>
           <p className='text-gray-500 font-medium mt-4'>
-            Appointment fee: <span className='text-gray-600'>{currencySympol}{docInfo.fees}</span>
+            Appointment fee: <span className='text-gray-600'>{currencySymbol}{docInfo.fees}</span>
           </p>
         </div>
       </div>

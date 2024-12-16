@@ -6,12 +6,12 @@ export const AppContext = createContext()
 //AppContextProvider component provides the doctors data to all its child components
 const AppContextProvider = (props) => {
 
-    const currencySympol = '৳'
+    const currencySymbol = '৳'
 
     // we can access this currency symbol in any component
     const value = {
         doctors,
-        currencySympol
+        currencySymbol
     }
 
     return(
