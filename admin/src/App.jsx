@@ -18,7 +18,7 @@ const App = () => {
 
   // if token is present, show the admin dashboard, else show the login page
   return aToken ? (
-    <div className='bg-[#00B395]'>
+    <div className='bg-[#F8F9FD]'>
       <ToastContainer/>   
       <Navbar/>
 
