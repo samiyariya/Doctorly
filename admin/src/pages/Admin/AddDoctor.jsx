@@ -56,7 +56,8 @@ const AddDoctor = () => {
         }
 
       } catch (error) {
-        
+        console.error(error); // Log the error for debugging
+        toast.error('An unexpected error occurred!');
       }
     }
 
