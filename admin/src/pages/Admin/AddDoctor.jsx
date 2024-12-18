@@ -6,7 +6,6 @@ import axios from 'axios'
 
 const AddDoctor = () => {
 
-
     const [docImg,setDocImg] = useState(false)
     const [name,setName] = useState('')
     const [email,setEmail] = useState('')
@@ -22,15 +21,16 @@ const AddDoctor = () => {
     const { backendUrl, aToken } = useContext(AdminContext)
 
     const onSubmitHandler = async (event) => {
-      event.preventDefault()
+      event.preventDefault()            // prevents page refresh on submitting the form
+      
       try {
 
         if (!docImg) {
           return toast.error('Image Not Selected')
         }
 
+        // saving these datas from the formdata into the database
         const formData = new FormData()
-        
         formData.append('image',docImg)
         formData.append('name',name)
         formData.append('email',email)
@@ -47,17 +47,28 @@ const AddDoctor = () => {
           console.log(`${key} : ${value}`);
         })
 
+        // api call
+        // sending the formdata to the backend & aToken as add doctor needs authentication
         const {data} = await axios.post(backendUrl + '/api/admin/add-doctor',formData,{headers: {aToken}} )
 
         if (data.success) {
           toast.success(data.message)
+          setDocImg(false)
+          setName('')
+          setPassword('')
+          setEmail('')
+          setAddress1('')
+          setAddress2('')
+          setDegree('')
+          setAbout('')
+          setFees('')
         }else{
           toast.error(data.message)
         }
 
       } catch (error) {
-        console.error(error); // Log the error for debugging
-        toast.error('An unexpected error occurred!');
+        toast.error(error.message);
+        console.log(error)
       }
     }
 
