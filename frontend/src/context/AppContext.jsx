@@ -36,6 +36,7 @@ const AppContextProvider = (props) => {
     }
 
 
+    // API CALL: function to get user profile details
     const loadUserProfileData = async () => {
         try {
             
