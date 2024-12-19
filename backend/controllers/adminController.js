@@ -62,7 +62,7 @@ const addDoctor = async (req, res) => {
 }
 
 
-// api for admin login
+// API for admin login
 const loginAdmin = async(req, res) => {
     try {
 

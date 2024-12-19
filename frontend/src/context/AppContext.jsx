@@ -9,14 +9,10 @@ const AppContextProvider = (props) => {
 
     const currencySymbol = '৳'
     const backendUrl = import.meta.env.VITE_BACKEND_URL
+  
     const [doctors, setDoctors] = useState([])
-    
-
-    // we can access this currency symbol in any component
-    const value = {
-        doctors,
-        currencySymbol
-    }
+    // if token is present in local storage, save the token. as a result even after reloading the page user will be logged in
+    const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):false)  
 
     // API CALL: function to get all the doctors in the frontend
     const getDoctorsData = async () => {
@@ -37,6 +33,14 @@ const AppContextProvider = (props) => {
         }
     }
 
+
+    // we can access this currency symbol in any component
+    const value = {
+        doctors,
+        currencySymbol,
+        token, setToken,
+        backendUrl
+    }
 
     // whenever the page gets reload getDoctorsData function gets called & shows doctors list
     useEffect(()=>{
