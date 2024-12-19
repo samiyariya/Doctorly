@@ -16,4 +16,19 @@ const changeAvailability = async(req, res)=>{
     }
 }
 
-export {changeAvailability}
+
+// API to get all doctors in frontend
+const doctorList = async(req, res)=>{
+    try {
+
+        // excludes password & email from the doctors response
+        const doctors = await doctorModel.find({}).select(['-password', '-email'])
+        res.json({success: true, doctors})
+        
+    } catch (error) {
+        console.log(error)
+        res.json({success: false, message: error.message})   
+    }
+}
+
+export {changeAvailability, doctorList}
