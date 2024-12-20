@@ -56,7 +56,7 @@ const AppContextProvider = (props) => {
 
     // we can access these in any component
     const value = {
-        doctors,
+        doctors, getDoctorsData,
         currencySymbol,
         token, setToken,
         backendUrl,
