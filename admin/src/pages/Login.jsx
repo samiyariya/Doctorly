@@ -20,6 +20,7 @@ const Login = () => {
       try {
 
         if(state === 'Admin'){
+          // api call. sending the email & password to the backend
             const {data} = await axios.post(backendUrl + '/api/admin/login',{email,password})
             if(data.success){
               // saving the token in local storage so that admin will be logged in after page reload
@@ -35,7 +36,8 @@ const Login = () => {
         }
         
       } catch (error) {
-        
+          toast.error(error.message);
+          console.log(error)
       }
     
       }

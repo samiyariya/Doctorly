@@ -1,15 +1,19 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {assets} from '../assets/assets.js'
 import { NavLink, useNavigate} from 'react-router-dom'
+import { AppContext } from '../context/AppContext.jsx';
 
 const Navbar = () => {
 
     // react router hook to navigate to different pages
     const navigate = useNavigate();
-
-    // creating state variables
+    const {token, setToken,userData} = useContext(AppContext)
     const [showMenu, setShowMenu] = useState(false);
-    const [token, setToken] = useState(true);  {/*token will be true if user is logged in*/}
+
+    const logout = () => {
+        setToken(false); 
+        localStorage.removeItem('token');
+    }
 
   return (
     <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
@@ -35,10 +39,10 @@ const Navbar = () => {
         </ul>  
         <div className='flex items-center gap-4'>   {/*button will be hidden in phone view, visible in medium & large devices */}
             {
-                token   // if token is true then user is logged in & hide button
+                token && userData   // if token & userData is true then user is logged in & hide button
                 // group class is used on the parent div, when parent div is hovered over, the child element can respond making it visible
                 ? <div className='flex items-center gap-2 cursor-pointer group relative'>   {/*profile pic will be shown as user is logged in*/}
-                    <img className='w-8 rounded-full' src={assets.profile_pic} alt=''/>
+                    <img className='w-8 rounded-full' src={userData.image} alt=''/>
                     <img className='w-2.5' src={assets.dropdown_icon} alt=''/>
                     {/* This div is hidden by default but becomes visible we hover over image (which has the group class)*/}
                     <div className='absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block'>
@@ -46,7 +50,7 @@ const Navbar = () => {
                             <p onClick={()=>navigate('/my-profile')} className='hover:text-black cursor-pointer'>My Profile</p>
                             <p onClick={()=>navigate('/my-appointments')} className='hover:text-black cursor-pointer'>My Appointments</p>
                             {/* after clicking on logout, token will be false &login button will be visible */}
-                            <p onClick={()=>setToken(false)} className='hover:text-black cursor-pointer'>Logout</p>
+                            <p onClick={logout} className='hover:text-black cursor-pointer'>Logout</p>
                         </div>
                     </div>
                 </div> 

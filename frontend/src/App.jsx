@@ -10,11 +10,14 @@ import Login from './pages/Login'
 import { Route, Routes} from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[10%]'>
       {/* We've mounted this navbar to make it available in all pages*/}
+      <ToastContainer/>
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
