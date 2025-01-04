@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'primary': '#5F6FFF'
+        'primary': '#00B395'
       },
       gridTemplateColumns: {
         // grid will automatically create as many columns as will fit (homepage doctor list)
