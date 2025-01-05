@@ -4,38 +4,39 @@ import { v2 as cloudinary } from "cloudinary"
 import doctorModel from "../models/doctorModel.js"
 import jwt from "jsonwebtoken"
 
-// API for adding doctor
-const addDoctor = async (req, res) => {
-    try {
-        // extracts data from the request body
-        const {name, email, password, speciality, degree, experience, about, fees, address} = req.body
-        const imageFile = req.file
 
-        // checking for all data to add doctor
-        if(!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address){
-            return res.json({succcess: false, message: "Missing Details"})
-        } 
+// //-------------------- 1 --------------------
 
-        // validating email format
-        if(!validator.isEmail(email)){ 
-            return res.json({succcess: false, message: "Please enter a valid email"})
+// Factory Pattern - Handles doctor creation and encapsulates object construction
+class DoctorFactory {
+    static async createDoctor(data, imageFile) {
+        const { name, email, password, speciality, degree, experience, about, fees, address } = data;
+
+        // Validate required fields
+        if (!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address) {
+            throw new Error('Missing Details');
         }
 
-        // validating strong password
-        if(password.length < 8){
-            return res.json({succcess: false, message: "Please enter a strong password"})
+        // Validate email format
+        if (!validator.isEmail(email)) {
+            throw new Error('Please enter a valid email');
         }
 
-        // hashing doctor password
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
+        // Validate password strength
+        if (password.length < 8) {
+            throw new Error('Please enter a strong password');
+        }
 
-        // uploading image to cloudinary
-        const imageUpload = await cloudinary.uploader.upload(imageFile.path, {resource_type: "image"})
-        const imageUrl = imageUpload.secure_url
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        // data format
-        const doctorData = {
+        // Upload image to cloudinary
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: 'image' });
+        const imageUrl = imageUpload.secure_url;
+
+        // Create doctor object
+        return new doctorModel({
             name,
             email,
             image: imageUrl,
@@ -47,59 +48,205 @@ const addDoctor = async (req, res) => {
             fees,
             address: JSON.parse(address),
             date: Date.now()
-        }
-
-        // adding doctor to database
-        const newDoctor = new doctorModel(doctorData)
-        await newDoctor.save()
-
-        res.json({success: true, message: "Doctor added successfully"})
-
-    } catch (error) {
-        console.log(error)
-        res.json({success: false, message: error.message})    
+        });
     }
 }
 
+// API for adding doctor
+const addDoctor = async (req, res) => {
+    try {
+        const newDoctor = await DoctorFactory.createDoctor(req.body, req.file);
+        await newDoctor.save();
+        res.json({ success: true, message: 'Doctor added successfully' });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+
+
+
+// -------------------- 2 --------------------
+
+// Singleton Pattern - Ensures only one instance of admin credentials validation
+class AdminAuthenticator {
+    constructor() {
+        if (!AdminAuthenticator.instance) {
+            AdminAuthenticator.instance = this;
+        }
+        return AdminAuthenticator.instance;
+    }
+
+    authenticate(email, password) {
+        return email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD;
+    }
+}
 
 // API for admin login
-const loginAdmin = async(req, res) => {
+const loginAdmin = async (req, res) => {
     try {
+        const { email, password } = req.body;
+        const authenticator = new AdminAuthenticator();
 
-        const {email, password} = req.body
-
-        // checking if the email and password are correct
-        if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
-
-            // generating token & sending as response
-            const token = jwt.sign(email+password, process.env.JWT_SECRET)
-            res.json({success:true, token})
-
+        if (authenticator.authenticate(email, password)) {
+            const token = jwt.sign(email + password, process.env.JWT_SECRET);
+            res.json({ success: true, token });
         } else {
-            res.json({success: false, message: "Invalid Credentials"})
+            res.json({ success: false, message: 'Invalid Credentials' });
         }
-        
     } catch (error) {
-        console.log(error)
-        res.json({success: false, message: error.message})   
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+
+
+
+// -------------------- 3 --------------------
+
+// Decorator Pattern - Adds filtering behavior to the doctor query
+class DoctorFilterDecorator {
+    constructor(doctorQuery) {
+        this.doctorQuery = doctorQuery;
     }
 
+    async execute() {
+        return await this.doctorQuery.select('-password');
+    }
 }
-
 
 // API to get all doctors list for admin panel
-const allDoctors = async(req, res) => {
+const allDoctors = async (req, res) => {
     try {
-        
-        // excludes password from the doctors response
-        const doctors = await doctorModel.find({}).select('-password')
-        res.json({success: true, doctors})
-        
+        const doctorQuery = doctorModel.find({});
+        const filteredDoctors = new DoctorFilterDecorator(doctorQuery);
+        const doctors = await filteredDoctors.execute();
+        res.json({ success: true, doctors });
 
     } catch (error) {
-        console.log(error)
-        res.json({success: false, message: error.message})    
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
-}
+};
 
 export {addDoctor, loginAdmin, allDoctors}
+
+
+
+
+
+
+
+
+
+
+
+// //-------------------- 1 --------------------
+
+
+// API for adding doctor
+// const addDoctor = async (req, res) => {
+//     try {
+//         // extracts data from the request body
+//         const {name, email, password, speciality, degree, experience, about, fees, address} = req.body
+//         const imageFile = req.file
+
+//         // checking for all data to add doctor
+//         if(!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address){
+//             return res.json({succcess: false, message: "Missing Details"})
+//         } 
+
+//         // validating email format
+//         if(!validator.isEmail(email)){ 
+//             return res.json({succcess: false, message: "Please enter a valid email"})
+//         }
+
+//         // validating strong password
+//         if(password.length < 8){
+//             return res.json({succcess: false, message: "Please enter a strong password"})
+//         }
+
+//         // hashing doctor password
+//         const salt = await bcrypt.genSalt(10)
+//         const hashedPassword = await bcrypt.hash(password, salt)
+
+//         // uploading image to cloudinary
+//         const imageUpload = await cloudinary.uploader.upload(imageFile.path, {resource_type: "image"})
+//         const imageUrl = imageUpload.secure_url
+
+//         // data format
+//         const doctorData = {
+//             name,
+//             email,
+//             image: imageUrl,
+//             password: hashedPassword,
+//             speciality,
+//             degree,
+//             experience,
+//             about,
+//             fees,
+//             address: JSON.parse(address),
+//             date: Date.now()
+//         }
+
+//         // adding doctor to database
+//         const newDoctor = new doctorModel(doctorData)
+//         await newDoctor.save()
+
+//         res.json({success: true, message: "Doctor added successfully"})
+
+//     } catch (error) {
+//         console.log(error)
+//         res.json({success: false, message: error.message})    
+//     }
+// }
+
+
+
+
+
+// //-------------------- 2 --------------------
+
+// API for admin login
+// const loginAdmin = async(req, res) => {
+//     try {
+
+//         const {email, password} = req.body
+
+//         // checking if the email and password are correct
+//         if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
+
+//             // generating token & sending as response
+//             const token = jwt.sign(email+password, process.env.JWT_SECRET)
+//             res.json({success:true, token})
+
+//         } else {
+//             res.json({success: false, message: "Invalid Credentials"})
+//         }
+        
+//     } catch (error) {
+//         console.log(error)
+//         res.json({success: false, message: error.message})   
+//     }
+
+// }
+
+
+// //-------------------- 3 --------------------
+
+// // API to get all doctors list for admin panel
+// const allDoctors = async(req, res) => {
+//     try {
+        
+//         // excludes password from the doctors response
+//         const doctors = await doctorModel.find({}).select('-password')
+//         res.json({success: true, doctors})
+        
+
+//     } catch (error) {
+//         console.log(error)
+//         res.json({success: false, message: error.message})    
+//     }
+// }
