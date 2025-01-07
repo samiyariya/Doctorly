@@ -10,6 +10,7 @@ class ChangeAvailabilityCommand {
         this.doctorModel = doctorModel;
     }
 
+    // performs the action of changing availability  [action]
     async execute() {
         try {
             const docData = await this.doctorModel.findById(this.docId);
@@ -29,7 +30,7 @@ class CommandFactory {
     }
 }
 
-// API to change doctor availability
+// API to change doctor availability     [request]
 const changeAvailability = async (req, res) => {
     const { docId } = req.body;
     const command = CommandFactory.createChangeAvailabilityCommand(docId, doctorModel);
