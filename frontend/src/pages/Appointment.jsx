@@ -21,6 +21,8 @@ const Appointment = () => {
   const [docSlots, setDocSlots] = useState([])
   const [slotIndex, setSlotIndex] = useState(0)
   const [slotTime, setSlotTime] = useState('')
+  // const [isFollowing, setIsFollowing] = useState(false); 
+
 
   // fetch other info of a doctor using the docId
   const fetchDocInfo = async () => {
@@ -139,6 +141,34 @@ const Appointment = () => {
     console.log(docSlots)
   }, [docSlots])
 
+
+
+  const followDoctor = async () => {
+    if (!token) {
+      toast.warn('Login to follow a doctor');
+      return navigate('/login');
+    }
+  
+    try {
+      console.log("docId:", docId); 
+      console.log({ token });  
+      console.log(backendUrl + '/api/user/follow-doctor'); 
+      const { data } = await axios.post(backendUrl + '/api/user/follow-doctor', { docId }, { headers: { token } });
+  
+      if (data.success) {
+        toast.success('You are now following this doctor');
+        // setIsFollowing(true);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+  };
+  
+
+
   // we'll show the appointment details only if the docInfo is available
   return docInfo && (
     <div>
@@ -171,6 +201,18 @@ const Appointment = () => {
           </p>
         </div>
       </div>
+
+
+
+      <div className="flex justify-between items-center gap-4 my-6">
+        <button onClick={followDoctor} className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">
+          {/* <img src={assets.bill_icon} alt="Bill Icon" className="w-5 h-5" /> */}
+          Follow Doctor
+          {/* {isFollowing ? "Following" : "Follow Doctor"} */}
+
+        </button>
+      </div>
+
 
       {/* ------------ Booking Slots ----------- */}
       <div className='sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700'>

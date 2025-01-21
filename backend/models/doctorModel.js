@@ -18,7 +18,8 @@ class DoctorSchemaFactory {
             fees: { type: Number, required: true },
             address: { type: Object, required: true },
             date: { type: Number, required: true },
-            slots_booked: { type: Object, default: {} }  
+            slots_booked: { type: Object, default: {} },
+            followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]  // List of users following the doctor
         }, { minimize: false });  // Ensure empty objects are saved
     }
 }

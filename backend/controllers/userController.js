@@ -7,6 +7,36 @@ import doctorModel from '../models/doctorModel.js'
 import appointmentModel from '../models/appointmentModel.js'
 import sendEmail from '../services/emailService.js'
 
+// Follow a doctor
+const followDoctor = async (req, res) => {
+    try {
+        console.log("Request body:", req.body);
+        const { docId } = req.body;
+        const userId = req.body.userId;  // Accessing userId from req.body
+
+        // Check if the user is already following the doctor
+        const doctor = await doctorModel.findById(docId);
+        if (!doctor) {
+            return res.status(404).json({ success: false, message: "Doctor not found" });
+        }
+
+        if (doctor.followers.includes(userId)) {
+            return res.status(400).json({ success: false, message: "Already following this doctor" });
+        }
+
+        // Add user to the doctor's followers list
+        doctor.followers.push(userId);
+        await doctor.save();
+
+        res.json({ success: true, message: "Successfully followed the doctor" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
+
 // API to register user 
 const registerUser = async(req, res) => {
     try {
@@ -252,7 +282,12 @@ const bookAppointment = async(req, res) => {
 };
 
 
-export {registerUser, loginUser, getProfile, updateProfile, bookAppointment}
+
+// API to follow a doctor
+
+
+
+export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, followDoctor}
 
 
 
