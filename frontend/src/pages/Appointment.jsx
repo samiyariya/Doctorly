@@ -142,6 +142,14 @@ const Appointment = () => {
   }, [docSlots])
 
 
+  useEffect(() => {
+    // Check local storage to see if the doctor is followed
+    const followingStatus = localStorage.getItem(`isFollowing_${docId}`);
+    if (followingStatus === 'true') {
+      setIsFollowing(true);
+    }
+  }, [docId]);
+
 
   const followDoctor = async () => {
     if (!token) {
@@ -158,6 +166,7 @@ const Appointment = () => {
       if (data.success) {
         toast.success('You are now following this doctor');
         setIsFollowing(true);
+        localStorage.setItem(`isFollowing_${docId}`, 'true'); // Save the state in local storage
       } else {
         toast.error(data.message);
       }
