@@ -21,7 +21,7 @@ const Appointment = () => {
   const [docSlots, setDocSlots] = useState([])
   const [slotIndex, setSlotIndex] = useState(0)
   const [slotTime, setSlotTime] = useState('')
-  // const [isFollowing, setIsFollowing] = useState(false); 
+  const [isFollowing, setIsFollowing] = useState(false); 
 
 
   // fetch other info of a doctor using the docId
@@ -157,7 +157,7 @@ const Appointment = () => {
   
       if (data.success) {
         toast.success('You are now following this doctor');
-        // setIsFollowing(true);
+        setIsFollowing(true);
       } else {
         toast.error(data.message);
       }
@@ -205,10 +205,10 @@ const Appointment = () => {
 
 
       <div className="flex justify-between items-center gap-4 my-6">
-        <button onClick={followDoctor} className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">
+        <button onClick={followDoctor} disabled={isFollowing} className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">
           {/* <img src={assets.bill_icon} alt="Bill Icon" className="w-5 h-5" /> */}
-          Follow Doctor
-          {/* {isFollowing ? "Following" : "Follow Doctor"} */}
+          {/* Follow Doctor */}
+          {isFollowing ? "Following" : "Follow Doctor"}
 
         </button>
       </div>
