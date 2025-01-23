@@ -246,13 +246,29 @@ const bookAppointment = async(req, res) => {
         res.json({ success: true, message: "Appointment Booked and Email Sent" });
 
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
+        console.log(error)
+        res.json({ success: false, message: error.message })
     }
 };
 
 
-export {registerUser, loginUser, getProfile, updateProfile, bookAppointment}
+//********************* */
+//API to get user appointments for frontend my-appointments page
+const listAppointment = async (req,res) => {
+    try {
+        const{userId} = req.body
+        const appointments = await appointmentModel.find({userId})
+
+        res.json({succcess:true,appointments})
+        
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+
+export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment}
 
 
 
@@ -467,6 +483,7 @@ export {registerUser, loginUser, getProfile, updateProfile, bookAppointment}
 // };
 
 // export { registerUser, loginUser, getProfile, updateProfile, bookAppointment };
+
 
 
 
