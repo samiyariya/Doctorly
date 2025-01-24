@@ -86,7 +86,7 @@ const MyAppointments = () => {
                         {!item.cancelled && !item.payment && (
                             <button
                                 onClick={() => navigate(`/payment/${item._id}`)}
-                                className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-all duration-300"
+                                className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-green-500 hover:text-white rounded transition-all duration-300"
                             >
                                 Pay Online
                             </button>
@@ -99,9 +99,9 @@ const MyAppointments = () => {
                         {!item.cancelled && !item.payment && (
                             <button
                                 onClick={() => cancelAppointment(item._id)}
-                                className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-red-600 hover:text-white transition-all duration-300"
+                                className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-red-500 rounded hover:text-white transition-all duration-300"
                             >
-                                Cancel appointment
+                                Cancel Appointment
                             </button>
                         )}
                         {item.cancelled && (
