@@ -31,6 +31,10 @@ const Appointment = () => {
   }
 
   const getAvailableSlots = async () => {
+    if (!docInfo || !docInfo.slots_booked) {
+      return; // Skip processing if docInfo is null or slots_booked is not available
+    }
+    
     setDocSlots([])
 
     // getting current date
