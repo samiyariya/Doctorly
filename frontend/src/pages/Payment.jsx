@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AppContext } from '../context/AppContext'
 
-const Payment = () => {
+// 4242 4242 4242 4242
+
+const Payment = ( ) => {
+
   const stripe = useStripe();
   const elements = useElements();
   const [email, setEmail] = useState("");
@@ -13,47 +17,66 @@ const Payment = () => {
   const [amount, setAmount] = useState("");
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
+  const { backendUrl, token} = useContext(AppContext)
+  const { appointmentId } = useParams();
 
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
+  
+  
+const handlePayment = async (e) => { 
+    e.preventDefault(); 
+    if (!stripe || !elements) return; 
 
-    setProcessing(true);
+    setProcessing(true); 
 
-    try {
-      // Call backend to create payment intent
-      const { data } = await axios.post("http://localhost:4000/create-payment-intent", {
-        amount: amount * 100, // Convert amount to cents
-      });
+    try { 
+        // Call backend to create payment intent 
+        const { data } = await axios.post(backendUrl + "/create-payment-intent", { amount: amount * 100 }); 
+        
+        const clientSecret = data.clientSecret; 
 
-      const clientSecret = data.clientSecret;
+        // Confirm the payment
+        const result = await stripe.confirmCardPayment(clientSecret, { 
+            payment_method: { 
+                card: elements.getElement(CardElement), 
+                billing_details: { 
+                    email: email, 
+                    name: name, 
+                    address: { country: country }, 
+                }, 
+            }, 
+        });
 
-      // Confirm the payment
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-          billing_details: {
-            email: email,
-            name: name,
-            address: {
-              country: country,
-            },
-          },
-        },
-      });
+        // Handle error case
+        if (result.error) { 
+            toast.error(result.error.message); 
+            return; // Exit function after showing error
+        }
 
-      if (result.error) {
-        toast.error(result.error.message);
-      } else if (result.paymentIntent.status === "succeeded") {
-        toast.success("Payment Successful!");
-        navigate("/my-appointments"); // Redirect after success
-      }
-    } catch (err) {
-      toast.error("Payment failed. Please try again.");
-    } finally {
-      setProcessing(false);
+        // Handle success case
+        if (result.paymentIntent.status === "succeeded") {
+            toast.success("Payment Successful! 1"); 
+
+
+            const { data } = await axios.post(backendUrl + '/api/user/update-payment-status', {appointmentId}, {headers:{token}})   
+            console.log("sending appointment id:", appointmentId);
+            console.log(data);
+
+            if(data.success){
+                console.log(data.message);
+                console.log("testing");
+            }
+            
+            navigate("/my-appointments"); 
+        }
+
+    } catch (err) { 
+        toast.error("Payment failed. Please try again."); 
+    } finally { 
+        setProcessing(false); 
     }
-  };
+};
+
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
