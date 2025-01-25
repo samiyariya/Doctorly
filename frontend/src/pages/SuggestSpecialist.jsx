@@ -22,6 +22,7 @@ const SpecialistRecommendation = () => {
     try {
       const response = await axios.post(backendUrl + "/api/user/suggest-specialist", { description });
       setResult(response.data);
+      setDescription("");
     } catch (error) {
       console.error(error);
       setResult({ success: false, message: "Error fetching recommendation. Please try again later." });
@@ -35,13 +36,13 @@ const SpecialistRecommendation = () => {
       <h1 className="text-3xl font-bold text-gray-600 mb-10">Find the Right Specialist</h1>
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white rounded-lg shadow p-6"
+        className="w-full max-w-2xl bg-white rounded-lg shadow p-8"
       >
         <label className="block text-11 font-medium text-gray-500 mb-2">
           Describe your symptoms
         </label>
         <textarea
-          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full p-3 border text-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           rows="5"
           placeholder="e.g., I have a severe headache and nausea"
           value={description}
@@ -57,10 +58,10 @@ const SpecialistRecommendation = () => {
       </form>
 
       {result && (
-        <div className="mt-6 w-full max-w-md bg-white rounded-lg shadow p-6">
+        <div className="mt-6 w-full max-w-2xl bg-green-100 rounded-lg shadow p-6">
           {result.success ? (
             <>
-              <h2 className="text-lg font-semibold text-gray-800">
+              <h2 className="text-lg font-semibold text-gray-600">
                 Recommendation
               </h2>
               <p className="text-gray-600">{result.message}</p>
