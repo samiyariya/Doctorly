@@ -194,38 +194,6 @@ const bookAppointment = async (req, res) => {
     }
 };
 
-// API to follow a doctor
-const followDoctor = async (req, res) => {
-    try {
-        console.log("Request body:", req.body);
-        const { docId } = req.body;
-        const userId = req.body.userId; // Accessing userId from req.body
-
-        // Check if the user is already following the doctor
-        const doctor = await doctorModel.findById(docId);
-        if (!doctor) {
-            return res
-                .status(404)
-                .json({ success: false, message: "Doctor not found" });
-        }
-
-        if (doctor.followers.includes(userId)) {
-            return res
-                .status(400)
-                .json({ success: false, message: "Already following this doctor" });
-        }
-
-        // Add user to the doctor's followers list
-        doctor.followers.push(userId);
-        await doctor.save();
-
-        res.json({ success: true, message: "Successfully followed the doctor" });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: error.message });
-    }
-};
-
 // API to get user appointments for frontend my-appointments page
 const listAppointment = async (req, res) => {
     try {
@@ -239,39 +207,7 @@ const listAppointment = async (req, res) => {
     }
 };
 
-// API to cancel appointment
-const cancelAppointment = async (req, res) => {
-    try {
-        const { userId, appointmentId } = req.body;
 
-        const appointmentData = await appointmentModel.findById(appointmentId);
-
-        //verify appointment user
-        if (appointmentData.userId !== userId) {
-            return res.json({ success: false, message: "Unauthorized action" });
-        }
-
-        await appointmentModel.findByIdAndUpdate(appointmentId, {
-            cancelled: true,
-        });
-
-        //releasing doctor slot
-        const { docId, slotDate, slotTime } = appointmentData;
-        const doctorData = await doctorModel.findById(docId);
-
-        let slots_booked = doctorData.slots_booked;
-        slots_booked[slotDate] = slots_booked[slotDate].filter(
-            (e) => e !== slotTime
-        );
-
-        await doctorModel.findByIdAndUpdate(docId, { slots_booked });
-
-        res.json({ success: true, message: "Appointment Cancelled" });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
-};
 
 // API to update payment status
 const updatePaymentStatus = async (req, res) => {
@@ -329,6 +265,76 @@ const searchDoctorsByName = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
+
+
+// API to cancel appointment
+const cancelAppointment = async (req, res) => {
+    try {
+        const { userId, appointmentId } = req.body;
+
+        const appointmentData = await appointmentModel.findById(appointmentId);
+
+        //verify appointment user
+        if (appointmentData.userId !== userId) {
+            return res.json({ success: false, message: "Unauthorized action" });
+        }
+
+        await appointmentModel.findByIdAndUpdate(appointmentId, {
+            cancelled: true,
+        });
+
+        //releasing doctor slot
+        const { docId, slotDate, slotTime } = appointmentData;
+        const doctorData = await doctorModel.findById(docId);
+
+        let slots_booked = doctorData.slots_booked;
+        slots_booked[slotDate] = slots_booked[slotDate].filter(
+            (e) => e !== slotTime
+        );
+
+        await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+        res.json({ success: true, message: "Appointment Cancelled" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+
+// API to follow a doctor
+const followDoctor = async (req, res) => {
+    try {
+        console.log("Request body:", req.body);
+        const { docId } = req.body;
+        const userId = req.body.userId; // Accessing userId from req.body
+
+        // Check if the user is already following the doctor
+        const doctor = await doctorModel.findById(docId);
+        if (!doctor) {
+            return res
+                .status(404)
+                .json({ success: false, message: "Doctor not found" });
+        }
+
+        if (doctor.followers.includes(userId)) {
+            return res
+                .status(400)
+                .json({ success: false, message: "Already following this doctor" });
+        }
+
+        // Add user to the doctor's followers list
+        doctor.followers.push(userId);
+        await doctor.save();
+
+        res.json({ success: true, message: "Successfully followed the doctor" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
 
 // API to suggest a specialist
 const suggestSpecialist = async (req, res) => {
