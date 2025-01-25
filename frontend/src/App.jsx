@@ -12,6 +12,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SearchResults from './pages/SearchResults'
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route path='/my-appointments' element={<MyAppointments />} />
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/search-results' element={<SearchResults />} />
       </Routes>
       <Footer />
       
