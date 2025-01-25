@@ -142,7 +142,7 @@ const Appointment = () => {
         setIsFollowing(true);
       }
     }
-  }, [docId]);
+  }, [docId, token]);
 
 
   const followDoctor = async () => {
