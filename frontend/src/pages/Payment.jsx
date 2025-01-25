@@ -69,7 +69,7 @@ const Payment = () => {
           { headers: { token } }
         );
 
-        navigate("/my-appointments");
+        navigate("/payment-success");
       }
     } catch (error) {
       toast.error("Payment failed. Please try again.");

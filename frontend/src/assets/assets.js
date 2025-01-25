@@ -19,6 +19,7 @@ import visa from './visa.png'
 import mastercard from './mastercard.png'
 import amex from './amex.png'
 import search from './search.png'
+import paydone from './paydone.png'
 import doc1 from './doc1.png'
 import doc2 from './doc2.png'
 import doc3 from './doc3.png'
@@ -64,7 +65,8 @@ export const assets = {
     mastercard,
     amex,
     razorpay_logo, 
-    search
+    search,
+    paydone
 }
 
 export const specialityData = [

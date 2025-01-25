@@ -2,6 +2,8 @@ import doctorModel from "../models/doctorModel.js"
 import sendEmail from "../services/emailService.js";
 import userModel from "../models/userModel.js";
 
+
+// API to change doctor availability
 const changeAvailability = async (req, res) => {
     try {
         const { docId } = req.body;
@@ -40,25 +42,7 @@ const changeAvailability = async (req, res) => {
 };
 
 
-// API to change doctor availability
-// const changeAvailability = async(req, res)=>{
-//     try {
-
-//         const {docId} = req.body
-
-//         const docData = await doctorModel.findById(docId)
-//         await doctorModel.findByIdAndUpdate(docId, {available: !docData.available})
-//         res.json({success: true, message: "Availability Changed"})
-
-//     } catch (error) {
-//         console.log(error)
-//         res.json({success: false, message: error.message})    
-//     }
-// }
-
-
 // API to get all doctors in frontend
-
 const doctorList = async(req, res)=>{
     try {
 
@@ -76,13 +60,21 @@ export {changeAvailability, doctorList}
 
 
 
+// API to change doctor availability
+// const changeAvailability = async(req, res)=>{
+//     try {
 
+//         const {docId} = req.body
 
+//         const docData = await doctorModel.findById(docId)
+//         await doctorModel.findByIdAndUpdate(docId, {available: !docData.available})
+//         res.json({success: true, message: "Availability Changed"})
 
-
-
-
-
+//     } catch (error) {
+//         console.log(error)
+//         res.json({success: false, message: error.message})    
+//     }
+// }
 
 
 // {/*-------------------- 1 --------------------*/}
@@ -149,11 +141,3 @@ export {changeAvailability, doctorList}
 //         res.json({ success: false, message: error.message });
 //     }
 // };
-
-
-
-
-
-
-
-
