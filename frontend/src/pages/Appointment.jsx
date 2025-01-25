@@ -5,18 +5,17 @@ import { assets } from '../assets/assets'
 import RelatedDoctors from '../components/RelatedDoctors'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+// import jwt from 'jsonwebtoken'
 
 
 const Appointment = () => {
 
-  // storing docid for a particular doctor to show the appointment details
   const { docId } = useParams()
   const { doctors, currencySymbol, backendUrl, token, getDoctorsData } = useContext(AppContext)
   const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
   const navigate = useNavigate()
 
-  // creating state variable to store other info of a doctor
   const [docInfo, setDocInfo] = useState(null)
   const [docSlots, setDocSlots] = useState([])
   const [slotIndex, setSlotIndex] = useState(0)
@@ -24,35 +23,28 @@ const Appointment = () => {
   const [isFollowing, setIsFollowing] = useState(false); 
 
 
-  // fetch other info of a doctor using the docId
   const fetchDocInfo = async () => {
-    // if the doc._id from doctor list is equal to the docId, value will be stored in docInfo variable
     const docInfo = doctors.find(doc => doc._id === docId)
     setDocInfo(docInfo)
-    // console.log(docInfo)
   }
 
   const getAvailableSlots = async () => {
     if (!docInfo || !docInfo.slots_booked) {
-      return; // Skip processing if docInfo is null or slots_booked is not available
+      return; 
     }
     
     setDocSlots([])
 
-    // getting current date
     let today = new Date()
 
     for (let i = 0; i < 7; i++) {
-      // getting date with index
       let currentDate = new Date(today)
       currentDate.setDate(today.getDate() + i)
 
-      // setting end time of the date with index
       let endTime = new Date()
       endTime.setDate(today.getDate() + i)
       endTime.setHours(21, 0, 0, 0)
 
-      // setting hours 
       if (today.getDate() === currentDate.getDate()) {
         currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10)
         currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0)
@@ -78,7 +70,6 @@ const Appointment = () => {
 
         // only display the slots that are available, not all the slots
         if(isSlotAvailable) {
-          // add slot to array
           timeSlots.push({
             datetime: new Date(currentDate),
             time: formattedTime
@@ -86,7 +77,6 @@ const Appointment = () => {
         }
 
 
-        // increment current time by 30 minutes
         currentDate.setMinutes(currentDate.getMinutes() + 30)
       }
 
@@ -147,13 +137,21 @@ const Appointment = () => {
 
 
   useEffect(() => {
-    // Check local storage to see if the doctor is followed
-    const followingStatus = localStorage.getItem(`isFollowing_${docId}`);
-    if (followingStatus === 'true') {
-      setIsFollowing(true);
+    if (token) {
+      const followingStatus = localStorage.getItem(`isFollowing_${docId}`);
+      if (followingStatus === "true") {
+        setIsFollowing(true);
+      }
     }
-  }, [docId]);
+  }, [docId, token]);
 
+  const getUserIdFromToken = () => {
+    if (token) {
+      const decodedToken = jwt_decode(token) // Decode the JWT token
+      return decodedToken.userId; // Return the userId from the decoded token
+    }
+    return null;
+  }
 
   const followDoctor = async () => {
     if (!token) {
@@ -162,15 +160,20 @@ const Appointment = () => {
     }
   
     try {
+
+      const userId = getUserIdFromToken();
+
+      console.log("userId:", userId);
       console.log("docId:", docId); 
       console.log({ token });  
+
       console.log(backendUrl + '/api/user/follow-doctor'); 
       const { data } = await axios.post(backendUrl + '/api/user/follow-doctor', { docId }, { headers: { token } });
   
       if (data.success) {
         toast.success('You are now following this doctor');
         setIsFollowing(true);
-        localStorage.setItem(`isFollowing_${docId}`, 'true'); // Save the state in local storage
+        localStorage.setItem(`isFollowing_${docId}`, 'true'); 
       } else {
         toast.error(data.message);
       }
