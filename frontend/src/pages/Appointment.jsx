@@ -145,13 +145,13 @@ const Appointment = () => {
     }
   }, [docId, token]);
 
-  const getUserIdFromToken = () => {
-    if (token) {
-      const decodedToken = jwt_decode(token) // Decode the JWT token
-      return decodedToken.userId; // Return the userId from the decoded token
-    }
-    return null;
-  }
+  // const getUserIdFromToken = () => {
+  //   if (token) {
+  //     const decodedToken = jwt_decode(token) // Decode the JWT token
+  //     return decodedToken.userId; // Return the userId from the decoded token
+  //   }
+  //   return null;
+  // }
 
   const followDoctor = async () => {
     if (!token) {
@@ -161,9 +161,9 @@ const Appointment = () => {
   
     try {
 
-      const userId = getUserIdFromToken();
+      // const userId = getUserIdFromToken();
 
-      console.log("userId:", userId);
+      // console.log("userId:", userId);
       console.log("docId:", docId); 
       console.log({ token });  
 
