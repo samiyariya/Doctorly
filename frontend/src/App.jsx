@@ -8,6 +8,7 @@ import MyAppointments from './pages/MyAppointments'
 import MyProfile from './pages/MyProfile'
 import Payment from './pages/Payment'
 import Login from './pages/Login'
+import SearchResults from './pages/SearchResults'
 import { Route, Routes} from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -37,6 +38,7 @@ const App = () => {
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/login' element={<Login />} />
         <Route path='/payment/:appointmentId' element={<Payment />} />
+        <Route path='/search-results' element={<SearchResults />} />
       </Routes>
       </Elements>
       <Footer />

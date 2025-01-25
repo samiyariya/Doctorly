@@ -18,6 +18,7 @@ import razorpay_logo from './razorpay_logo.png'
 import visa from './visa.png'
 import mastercard from './mastercard.png'
 import amex from './amex.png'
+import search from './search.png'
 import doc1 from './doc1.png'
 import doc2 from './doc2.png'
 import doc3 from './doc3.png'
@@ -62,6 +63,8 @@ export const assets = {
     visa,
     mastercard,
     amex
+    razorpay_logo, 
+    search
 }
 
 export const specialityData = [
