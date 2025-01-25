@@ -396,6 +396,7 @@ const suggestSpecialist = async (req, res) => {
 
             // Pediatrician
             child: { specialist: "Pediatrician", priority: 1 },
+            children: { specialist: "Pediatrician", priority: 1 },
             baby: { specialist: "Pediatrician", priority: 1 },
             infant: { specialist: "Pediatrician", priority: 1 },
             toddler: { specialist: "Pediatrician", priority: 1 },
@@ -461,10 +462,8 @@ const suggestSpecialist = async (req, res) => {
             return res.json({
                 success: true,
                 specialists: sortedSpecialists,
-                message: `Based on your description, you should visit the following specialists: ${sortedSpecialists.join(
-                    ", "
-                )}.`,
-            });
+                message: "Based on your description, you should visit the recommended specialists.",
+              });
         }
     } catch (error) {
         console.log(error);
