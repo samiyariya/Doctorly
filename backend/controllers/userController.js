@@ -230,8 +230,16 @@ const searchDoctorsByName = async (req, res) => {
             return res.json({ success: false, message: "Please provide a name to search for" });
         }
 
-        // Searching for doctors with a case-insensitive regex match
-        const doctors = await doctorModel.find({name: { $regex: name, $options: 'i' }});
+       // Split the search name into words (based on spaces)
+       const words = name.trim().split(/\s+/);
+
+       // Create a regex pattern that searches for all words in the name
+       const regexPattern = words.map(word => `(?:\\b${word}\\b)`).join('|'); // Use word boundaries to match complete words
+
+       // Search for doctors whose name matches the regex pattern
+       const doctors = await doctorModel.find({
+           name: { $regex: regexPattern, $options: 'i' } // Case-insensitive match
+       });
 
         if (doctors.length === 0) {
             return res.json({ success: false, message: "No doctors found with that name" });
