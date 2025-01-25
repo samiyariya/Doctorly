@@ -9,6 +9,7 @@ import MyProfile from './pages/MyProfile'
 import Payment from './pages/Payment'
 import Login from './pages/Login'
 import SearchResults from './pages/SearchResults'
+import PaymentSuccess from './pages/PaymentSuccess'
 import { Route, Routes} from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -39,6 +40,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/payment/:appointmentId' element={<Payment />} />
         <Route path='/search-results' element={<SearchResults />} />
+        <Route path='/payment-success' element={<PaymentSuccess />} />
       </Routes>
       </Elements>
       <Footer />
