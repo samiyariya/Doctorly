@@ -216,6 +216,74 @@ const bookAppointment = async(req, res) => {
         res.json({ success: true, message: "Appointment Booked and Email Sent" });
 
     } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+};
+
+
+// API to get user appointments for frontend my-appointments page
+const listAppointment = async (req,res) => {
+    try {
+        const{userId} = req.body
+        const appointments = await appointmentModel.find({userId})
+
+        res.json({success:true,appointments})
+        
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+// API to cancel appointment
+const cancelAppointment = async (req, res) => {
+    try {
+
+        const {userId, appointmentId} = req.body
+
+        const appointmentData = await appointmentModel.findById(appointmentId)
+
+        //verify appointment user
+        if (appointmentData.userId !== userId){
+            return res.json({success:false, message:'Unauthorized action'})
+        }
+
+        await appointmentModel.findByIdAndUpdate(appointmentId, {cancelled:true})
+
+        //releasing doctor slot
+        const {docId, slotDate, slotTime} = appointmentData
+        const doctorData = await doctorModel.findById(docId)
+
+        let slots_booked = doctorData.slots_booked
+        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+        
+        await doctorModel.findByIdAndUpdate(docId, {slots_booked})
+
+        res.json({success:true, message:'Appointment Cancelled'})
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+
+// API to update payment status
+const updatePaymentStatus = async (req, res) => {
+    try {
+        const { appointmentId } = req.body;
+
+        const appointment = await appointmentModel.findById(appointmentId);
+        if (!appointment) {
+            return res.json({ success: false, message: "Appointment not found" });
+        }
+
+        appointment.payment = true; // Mark as paid
+        await appointment.save();
+
+        res.json({ success: true, message: "Payment status updated successfully" });
+    } catch (error) {
         console.log(error);
         res.json({ success: false, message: error.message });
     }
@@ -252,11 +320,64 @@ const searchDoctorsByName = async (req, res) => {
     }
 };
 
+export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, updatePaymentStatus, followDoctor, searchDoctorsByName}
 
 
 
 
-export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, followDoctor, searchDoctorsByName}
+// API to book appointment
+// const bookAppointment = async(req, res) => {
+//     try {
+//         const {userId, docId, slotDate, slotTime} = req.body
+
+//         // finding the doctor
+//         const docData = await doctorModel.findById(docId).select('-password')
+
+//         if(!docData.available){            // if doctor is not found, print not available
+//             return res.json({success: false, message: "Doctor is not available"})
+//         } 
+
+//         // if doct available, getting the slots booked data
+//         let slots_booked = docData.slots_booked
+
+//         // checking for slot availability
+//         if(slots_booked[slotDate]) {
+//             // checking if slot is available for a certain date & time
+//             if(slots_booked[slotDate].includes(slotTime)){
+//                 return res.json({success: false, message: "Slot not available"})
+//             } else {
+//                 slots_booked[slotDate].push(slotTime)        // booking the slot
+//             }
+//         } else {
+//             slots_booked[slotDate] = []
+//             slots_booked[slotDate].push(slotTime)
+//         }
+        
+//         const userData = await userModel.findById(userId).select('-password')
+
+//         delete docData.slots_booked  // we don't want to store slots booked after booking an appointment, so delete it
+
+//         const appointmentData = {         // creating appointment data
+//             userId,
+//             docId,
+//             userData,
+//             docData,
+//             amount: docData.fees,
+//             slotTime,
+//             slotDate,
+//             date: Date.now()
+//         }
+
+//         const newAppointment = new appointmentModel(appointmentData)
+//         await newAppointment.save()
+
+//         // save new slots data in docData
+//         await doctorModel.findByIdAndUpdate(docId, {slots_booked})
+
+//         res.json({success: true, message: "Appointment Booked"})
+
+
+
 
 
 
@@ -306,6 +427,11 @@ export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, fol
 //             date: Date.now()
 //         }
 
+//     } catch (error) {
+//         console.log(error)
+//         res.json({success: false, message: error.message})
+//     }
+// }
 //         const newAppointment = new appointmentModel(appointmentData)
 //         await newAppointment.save()
 
