@@ -290,7 +290,37 @@ const updatePaymentStatus = async (req, res) => {
 };
 
 
+const searchDoctorsByName = async (req, res) => {
+    try {
+        const { name } = req.body; // Name entered by the user
+        
+        if (!name) {
+            return res.json({ success: false, message: "Please provide a name to search for" });
+        }
 
+       // Split the search name into words (based on spaces)
+       const words = name.trim().split(/\s+/);
+
+       // Create a regex pattern that searches for all words in the name
+       const regexPattern = words.map(word => `(?:\\b${word}\\b)`).join('|'); // Use word boundaries to match complete words
+
+       // Search for doctors whose name matches the regex pattern
+       const doctors = await doctorModel.find({
+           name: { $regex: regexPattern, $options: 'i' } // Case-insensitive match
+       });
+
+        if (doctors.length === 0) {
+            return res.json({ success: false, message: "No doctors found with that name" });
+        }
+
+        res.json({ success: true, doctors });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, updatePaymentStatus, followDoctor, searchDoctorsByName}
 
 
 
@@ -345,38 +375,6 @@ const updatePaymentStatus = async (req, res) => {
 //         await doctorModel.findByIdAndUpdate(docId, {slots_booked})
 
 //         res.json({success: true, message: "Appointment Booked"})
-
-const searchDoctorsByName = async (req, res) => {
-    try {
-        const { name } = req.body; // Name entered by the user
-        
-        if (!name) {
-            return res.json({ success: false, message: "Please provide a name to search for" });
-        }
-
-       // Split the search name into words (based on spaces)
-       const words = name.trim().split(/\s+/);
-
-       // Create a regex pattern that searches for all words in the name
-       const regexPattern = words.map(word => `(?:\\b${word}\\b)`).join('|'); // Use word boundaries to match complete words
-
-       // Search for doctors whose name matches the regex pattern
-       const doctors = await doctorModel.find({
-           name: { $regex: regexPattern, $options: 'i' } // Case-insensitive match
-       });
-
-        if (doctors.length === 0) {
-            return res.json({ success: false, message: "No doctors found with that name" });
-        }
-
-        res.json({ success: true, doctors });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
-};
-
-export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, updatePaymentStatus, followDoctor, searchDoctorsByName}
 
 
 

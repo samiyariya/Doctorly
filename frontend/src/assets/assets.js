@@ -62,7 +62,7 @@ export const assets = {
     razorpay_logo,
     visa,
     mastercard,
-    amex
+    amex,
     razorpay_logo, 
     search
 }
