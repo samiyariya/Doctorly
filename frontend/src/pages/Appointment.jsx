@@ -9,14 +9,12 @@ import axios from 'axios'
 
 const Appointment = () => {
 
-  // storing docid for a particular doctor to show the appointment details
   const { docId } = useParams()
   const { doctors, currencySymbol, backendUrl, token, getDoctorsData } = useContext(AppContext)
   const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
   const navigate = useNavigate()
 
-  // creating state variable to store other info of a doctor
   const [docInfo, setDocInfo] = useState(null)
   const [docSlots, setDocSlots] = useState([])
   const [slotIndex, setSlotIndex] = useState(0)
@@ -24,35 +22,28 @@ const Appointment = () => {
   const [isFollowing, setIsFollowing] = useState(false); 
 
 
-  // fetch other info of a doctor using the docId
   const fetchDocInfo = async () => {
-    // if the doc._id from doctor list is equal to the docId, value will be stored in docInfo variable
     const docInfo = doctors.find(doc => doc._id === docId)
     setDocInfo(docInfo)
-    // console.log(docInfo)
   }
 
   const getAvailableSlots = async () => {
     if (!docInfo || !docInfo.slots_booked) {
-      return; // Skip processing if docInfo is null or slots_booked is not available
+      return; 
     }
     
     setDocSlots([])
 
-    // getting current date
     let today = new Date()
 
     for (let i = 0; i < 7; i++) {
-      // getting date with index
       let currentDate = new Date(today)
       currentDate.setDate(today.getDate() + i)
 
-      // setting end time of the date with index
       let endTime = new Date()
       endTime.setDate(today.getDate() + i)
       endTime.setHours(21, 0, 0, 0)
 
-      // setting hours 
       if (today.getDate() === currentDate.getDate()) {
         currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10)
         currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0)
@@ -78,7 +69,6 @@ const Appointment = () => {
 
         // only display the slots that are available, not all the slots
         if(isSlotAvailable) {
-          // add slot to array
           timeSlots.push({
             datetime: new Date(currentDate),
             time: formattedTime
@@ -86,7 +76,6 @@ const Appointment = () => {
         }
 
 
-        // increment current time by 30 minutes
         currentDate.setMinutes(currentDate.getMinutes() + 30)
       }
 
