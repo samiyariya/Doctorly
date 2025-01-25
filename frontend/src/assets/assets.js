@@ -15,6 +15,10 @@ import info_icon from './info_icon.svg'
 import upload_icon from './upload_icon.png'
 import stripe_logo from './stripe_logo.png'
 import razorpay_logo from './razorpay_logo.png'
+import visa from './visa.png'
+import mastercard from './mastercard.png'
+import amex from './amex.png'
+import search from './search.png'
 import doc1 from './doc1.png'
 import doc2 from './doc2.png'
 import doc3 from './doc3.png'
@@ -55,7 +59,12 @@ export const assets = {
     dropdown_icon,
     upload_icon,
     stripe_logo,
-    razorpay_logo
+    razorpay_logo,
+    visa,
+    mastercard,
+    amex,
+    razorpay_logo, 
+    search
 }
 
 export const specialityData = [
