@@ -216,47 +216,79 @@ const bookAppointment = async(req, res) => {
         res.json({ success: true, message: "Appointment Booked and Email Sent" });
 
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
+        console.log(error)
+        res.json({ success: false, message: error.message })
     }
 };
 
 
-const searchDoctorsByName = async (req, res) => {
+// API to get user appointments for frontend my-appointments page
+const listAppointment = async (req,res) => {
     try {
-        const { name } = req.body; // Name entered by the user
+        const{userId} = req.body
+        const appointments = await appointmentModel.find({userId})
+
+        res.json({success:true,appointments})
         
-        if (!name) {
-            return res.json({ success: false, message: "Please provide a name to search for" });
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+// API to cancel appointment
+const cancelAppointment = async (req, res) => {
+    try {
+
+        const {userId, appointmentId} = req.body
+
+        const appointmentData = await appointmentModel.findById(appointmentId)
+
+        //verify appointment user
+        if (appointmentData.userId !== userId){
+            return res.json({success:false, message:'Unauthorized action'})
         }
 
-       // Split the search name into words (based on spaces)
-       const words = name.trim().split(/\s+/);
+        await appointmentModel.findByIdAndUpdate(appointmentId, {cancelled:true})
 
-       // Create a regex pattern that searches for all words in the name
-       const regexPattern = words.map(word => `(?:\\b${word}\\b)`).join('|'); // Use word boundaries to match complete words
+        //releasing doctor slot
+        const {docId, slotDate, slotTime} = appointmentData
+        const doctorData = await doctorModel.findById(docId)
 
-       // Search for doctors whose name matches the regex pattern
-       const doctors = await doctorModel.find({
-           name: { $regex: regexPattern, $options: 'i' } // Case-insensitive match
-       });
+        let slots_booked = doctorData.slots_booked
+        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+        
+        await doctorModel.findByIdAndUpdate(docId, {slots_booked})
 
-        if (doctors.length === 0) {
-            return res.json({ success: false, message: "No doctors found with that name" });
+        res.json({success:true, message:'Appointment Cancelled'})
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+
+// API to update payment status
+const updatePaymentStatus = async (req, res) => {
+    try {
+        const { appointmentId } = req.body;
+
+        const appointment = await appointmentModel.findById(appointmentId);
+        if (!appointment) {
+            return res.json({ success: false, message: "Appointment not found" });
         }
 
-        res.json({ success: true, doctors });
+        appointment.payment = true; // Mark as paid
+        await appointment.save();
+
+        res.json({ success: true, message: "Payment status updated successfully" });
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: error.message });
     }
 };
 
-
-
-
-
-export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, followDoctor, searchDoctorsByName}
 
 
 
@@ -306,6 +338,102 @@ export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, fol
 //             date: Date.now()
 //         }
 
+//         const newAppointment = new appointmentModel(appointmentData)
+//         await newAppointment.save()
+
+//         // save new slots data in docData
+//         await doctorModel.findByIdAndUpdate(docId, {slots_booked})
+
+//         res.json({success: true, message: "Appointment Booked"})
+
+const searchDoctorsByName = async (req, res) => {
+    try {
+        const { name } = req.body; // Name entered by the user
+        
+        if (!name) {
+            return res.json({ success: false, message: "Please provide a name to search for" });
+        }
+
+       // Split the search name into words (based on spaces)
+       const words = name.trim().split(/\s+/);
+
+       // Create a regex pattern that searches for all words in the name
+       const regexPattern = words.map(word => `(?:\\b${word}\\b)`).join('|'); // Use word boundaries to match complete words
+
+       // Search for doctors whose name matches the regex pattern
+       const doctors = await doctorModel.find({
+           name: { $regex: regexPattern, $options: 'i' } // Case-insensitive match
+       });
+
+        if (doctors.length === 0) {
+            return res.json({ success: false, message: "No doctors found with that name" });
+        }
+
+        res.json({ success: true, doctors });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, updatePaymentStatus, followDoctor, searchDoctorsByName}
+
+
+
+
+
+
+
+
+
+// API to book appointment
+// const bookAppointment = async(req, res) => {
+//     try {
+//         const {userId, docId, slotDate, slotTime} = req.body
+
+//         // finding the doctor
+//         const docData = await doctorModel.findById(docId).select('-password')
+
+//         if(!docData.available){            // if doctor is not found, print not available
+//             return res.json({success: false, message: "Doctor is not available"})
+//         } 
+
+//         // if doct available, getting the slots booked data
+//         let slots_booked = docData.slots_booked
+
+//         // checking for slot availability
+//         if(slots_booked[slotDate]) {
+//             // checking if slot is available for a certain date & time
+//             if(slots_booked[slotDate].includes(slotTime)){
+//                 return res.json({success: false, message: "Slot not available"})
+//             } else {
+//                 slots_booked[slotDate].push(slotTime)        // booking the slot
+//             }
+//         } else {
+//             slots_booked[slotDate] = []
+//             slots_booked[slotDate].push(slotTime)
+//         }
+        
+//         const userData = await userModel.findById(userId).select('-password')
+
+//         delete docData.slots_booked  // we don't want to store slots booked after booking an appointment, so delete it
+
+//         const appointmentData = {         // creating appointment data
+//             userId,
+//             docId,
+//             userData,
+//             docData,
+//             amount: docData.fees,
+//             slotTime,
+//             slotDate,
+//             date: Date.now()
+//         }
+
+//     } catch (error) {
+//         console.log(error)
+//         res.json({success: false, message: error.message})
+//     }
+// }
 //         const newAppointment = new appointmentModel(appointmentData)
 //         await newAppointment.save()
 
