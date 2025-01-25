@@ -11,6 +11,7 @@ import Dashboard from './pages/Admin/Dashboard';
 import AddDoctor from './pages/Admin/AddDoctor';
 import AllAppointments from './pages/Admin/AllAppointments';
 import DoctorsList from './pages/Admin/DoctorsList';
+import RemoveDoctor from './pages/Admin/RemoveDoctor';
 
 const App = () => {
 
@@ -30,6 +31,7 @@ const App = () => {
           <Route path='/all-appointments' element={<AllAppointments/>} />
           <Route path='/add-doctor' element={<AddDoctor/>} />
           <Route path='/doctor-list' element={<DoctorsList/>} />
+          <Route path='/remove-doctor' element={<RemoveDoctor/>} />
         </Routes>
       </div>
     </div>
