@@ -37,8 +37,8 @@ const Navbar = () => {
       />
 
       {/* Navigation Menu */}
-      <div className="flex items-center gap-5 md:flex-1">
-        <ul className="hidden md:flex items-start gap-5 font-medium justify-between ml-28">
+      <div className="flex items-center gap-4 md:flex-1">
+        <ul className="hidden md:flex items-start gap-4 font-medium justify-between ml-28">
           <NavLink to="/">
             <li className="py-1">HOME</li>
             <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden" />
@@ -70,7 +70,7 @@ const Navbar = () => {
             value={searchQuery}
             onChange={handleSearch}
             placeholder="Search for doctors..."
-            className="border border-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm w-80 ml-20 focus:outline-none focus:ring-1 focus:ring-gray-300 pr-10" 
+            className="border border-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm w-70 ml-20 focus:outline-none focus:ring-1 focus:ring-gray-300 pr-7" 
           />
 
           <button

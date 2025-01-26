@@ -61,51 +61,81 @@ const Dashboard = () => {
 
 
 
-<div className="bg-white py-8 rounded-lg shadow-md">
-  {/* Header */}
-  <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 border-b rounded-t-lg">
-    <img className="w-5" src={assets.list_icon} alt="List Icon" />
-    <p className="text-lg font-semibold text-gray-700">Bookings</p>
-  </div>
+<div className='w-full max-w-6xl m-5'>
+  <p className='mb-3 text-lg font-medium'>All Appointments</p>
+  <div className='bg-white border rounded text-sm max-h-[80vh] min-h-[60vh] overflow-y-scroll'>
+    
+    {/* Header for larger screens */}
+    <div className='hidden sm:grid grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] grid-flow-col py-3 px-6 border-b'>
+      <p>#</p>
+      <p>Patient</p>
+      <p>{/*Age*/}</p>
+      <p>Date & Time</p>
+      <p>Doctor</p>
+      <p>Fees</p>
+      <p>Actions</p>
+    </div>
 
-  {/* Booking List */}
-  <div className="divide-y divide-gray-200">
+    {/* Booking List */}
     {dashData.latestAppointments.map((item, index) => (
       <div
         key={index}
-        className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-all"
+        className='flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] items-center text-gray-500 py-3 px-6 border-b hover:bg-gray-50'
       >
-        {/* Doctor Image */}
-        <img
-          className="rounded-full w-12 h-12 object-cover shadow-sm"
-          src={item.docData.image}
-          alt={item.docData.name}
-        />
+        {/* Index for larger screens */}
+        <p className='max-sm:hidden'>{index + 1}</p>
 
-        {/* Booking Info */}
-        <div className="flex-1 text-sm">
-          <p className="text-gray-800 font-semibold">{item.docData.name}</p>
-          <p className="text-gray-500">{slotDateFormat(item.slotDate)}</p>
+        {/* Patient Info */}
+        <div className='flex items-center gap-2'>
+          <img className='w-8 rounded-full' src={item.userData.image} alt="Patient" />
+          <p>{item.userData.name}</p>
         </div>
 
+        {/* Age (Optional) */}
+        <p className='max-sm:hidden'>
+          {/* You can calculate the age here */}
+          {/* calculateAge(item.userData.dob) */}
+        </p>
+
+        {/* Date & Time */}
+        <p>{slotDateFormat(item.slotDate)}, {item.slotTime}</p>
+
+        {/* Doctor Info */}
+        <div className='flex items-center gap-2'>
+          <img className='w-8 rounded-full bg-teal-500' src={item.docData.image} alt="Doctor" />
+          <p>{item.docData.name}</p>
+        </div>
+
+        {/* Fees */}
+        <p>{currency} {item.amount}</p>
+
         {/* Status */}
-        {item.cancelled ? (
-          <p className="text-red-500 text-xs font-medium bg-red-100 py-1 px-3 rounded-full">
-            Cancelled
-          </p>
-        ) : item.isCompleted ? (
-          <p className="text-green-500 text-xs font-medium bg-green-100 py-1 px-3 rounded-full">
-            Completed
-          </p>
-        ) : (
-          <p className="text-blue-500 text-xs font-medium bg-blue-100 py-1 px-3 rounded-full">
-            Booked
-          </p>
+        {
+          item.cancelled
+            ? <p className='text-red-400 text-xs font-medium'>Cancelled</p>
+            : item.isCompleted
+              ? <p className='text-green-500 text-xs font-medium'>Completed</p>
+              : <p className="text-blue-500 text-xs font-medium">Booked</p>
+        }
+
+        {/* Actions */}
+        {/* Optional: add an action for canceling or editing */}
+        {/* 
+        {!item.cancelled && !item.isCompleted && (
+          <img
+            onClick={() => cancelAppointment(item._id)}
+            className='w-10 cursor-pointer'
+            src={assets.cancel_icon}
+            alt="Cancel Icon"
+          />
         )}
+        */}
       </div>
     ))}
+
   </div>
 </div>
+
 
 
     </div>

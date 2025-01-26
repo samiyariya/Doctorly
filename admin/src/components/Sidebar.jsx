@@ -9,6 +9,8 @@ const Sidebar = () => {
     const {aToken} = useContext(AdminContext)
     const {dToken} = useContext(DoctorContext)
 
+    
+
   return (
     <div className='min-h-screen bg-white border-r'>
         {/* Admin site */}
