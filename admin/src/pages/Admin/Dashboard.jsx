@@ -8,7 +8,8 @@ import { AppContext } from '../../context/AppContext'
 const Dashboard = () => {
 
   const {aToken, getDashData, cancelAppointment, dashData} = useContext(AdminContext)
-  const {slotDateFormat} = useContext(AppContext)
+  const {slotDateFormat, currency} = useContext(AppContext)
+
 
   useEffect(()=>{
     if(aToken){
@@ -87,7 +88,7 @@ const Dashboard = () => {
 
         {/* Patient Info */}
         <div className='flex items-center gap-2'>
-          <img className='w-8 rounded-full' src={item.userData.image} alt="Patient" />
+          <img className="rounded-full w-12 h-12 object-cover shadow-sm" src={item.userData.image} alt="Patient" />
           <p>{item.userData.name}</p>
         </div>
 
@@ -102,12 +103,12 @@ const Dashboard = () => {
 
         {/* Doctor Info */}
         <div className='flex items-center gap-2'>
-          <img className='w-8 rounded-full bg-teal-500' src={item.docData.image} alt="Doctor" />
+          <img className='rounded-full w-12 h-12 object-cover shadow-sm bg-teal-500' src={item.docData.image} alt="Doctor" />
           <p>{item.docData.name}</p>
         </div>
 
         {/* Fees */}
-        {/* <p>{currency} {item.amount}</p> */}
+        <p>{currency} {item.amount}</p>
 
         {/* Status */}
         {
