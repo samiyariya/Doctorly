@@ -59,7 +59,6 @@ class NeurologyRecommendation extends SpecialistRecommendationStrategy {
     }
 }
 
-// Similarly, you can add other strategies for Gastroenterologist, Pediatrician, etc.
 
 
 

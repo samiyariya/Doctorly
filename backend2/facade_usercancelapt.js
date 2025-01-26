@@ -1,4 +1,5 @@
 class CancelAppointmentFacade {
+
     constructor(appointmentModel, doctorModel, appointmentId, userId) {
         this.appointmentModel = appointmentModel;
         this.doctorModel = doctorModel;

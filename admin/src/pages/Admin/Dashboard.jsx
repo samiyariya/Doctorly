@@ -107,7 +107,7 @@ const Dashboard = () => {
         </div>
 
         {/* Fees */}
-        <p>{currency} {item.amount}</p>
+        {/* <p>{currency} {item.amount}</p> */}
 
         {/* Status */}
         {
