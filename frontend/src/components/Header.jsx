@@ -9,12 +9,10 @@ const Header = () => {
       {/* ------Left Side------ */}
       <div className='md:w-1/2 flex flex-col items-start justify-center gap-4 py-10 m-auto md:py-[10vw] md:mb-[-30px]'>
         <p className='text-3xl md:text-4xl lg:text-5xl text-white font-semibold leading-tight md:leading-tight lg:leading-tight'>
-          Book your Appointment <br/> With Trusted Doctors
-        </p>
+        Making Health Care Better Together         </p>
         <div className='flex flex-col md:flex-row items-center gap-3 text-white text-sm font-light'>
-          <img className='w-28' src={assets.group_profiles} alt=''/>
-          <p>Simply browse through out extensive list of trusted doctors, 
-          <br className='hidden sm:block'/> schedule your appointment hastle-free
+          {/* <img className='w-28' src={assets.group_profiles} alt=''/> */}
+          <p>  Book your appointment <br className='hidden sm:flex'/>    <br className='hidden sm:block'/> schedule your appointment hastle-free
           </p>
         </div>
         {/*scales the element up to 105% of its size,  transition duration to 300 ms*/}

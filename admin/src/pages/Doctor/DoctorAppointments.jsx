@@ -36,7 +36,7 @@ const DoctorAppointments = () => {
                     <div className='flex flex-wrap justify-between max-sm:gap-5 max-sm:text-base sm:grid grid-cols-[0.5fr_2fr_1fr_0.5fr_3fr_1fr_1fr] gap-1 items-center text-gray-500 py-3 px-6 border-b hover:bg-gray-100' key={index}>
                         <p className='max-sm:hidden'>{index+1}</p>
                         <div className='flex items-center gap-2'>
-                            <img className='w-8 rounded-full' src={item.userData.image} alt="" /> <p>{item.userData.name}</p>
+                            <img           className="rounded-full w-12 h-12 object-cover shadow-sm"src={item.userData.image} alt="" /> <p>{item.userData.name}</p>
                         </div>
                         <div>
                             <p className='text-xs inline border border-primary px-2 rounded-full'>
@@ -48,9 +48,12 @@ const DoctorAppointments = () => {
                         <p>{currency} {item.amount}</p>
                         {
                             item.cancelled
-                            ? <p className='text-red-400 text-xs font-medium'>cancelled</p>
+                            ?           <p className="text-red-500 text-xs font-medium bg-red-100 py-1 px-2 rounded-full flex items-center justify-center">
+                            Cancelled
+                          </p>
+
                             :item.isCompleted
-                              ?<p className='text-green-500 text-xs font-medium'>completed</p>
+                              ?          <p className="text-green-500 text-xs font-medium bg-green-100 py-1 px-2 rounded-full flex items-center justify-center">Completed</p>
                               : <div className='flex'>
                                 {/* <img onClick={()=>cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" /> */}
                                 <img onClick={()=>completeAppointment(item._id)} className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
