@@ -61,35 +61,52 @@ const Dashboard = () => {
 
 
 
-      <div className='bg-white'>
-        <div className='flex items-center gap-2.5 px-4 py-4 mt-10 rounded-t border'>
-          <img src={assets.list_icon} alt="" />
-          <p className='font-semibold text-gray-500'>Latest Booking</p>
+<div className="bg-white py-8 rounded-lg shadow-md">
+  {/* Header */}
+  <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 border-b rounded-t-lg">
+    <img className="w-5" src={assets.list_icon} alt="List Icon" />
+    <p className="text-lg font-semibold text-gray-700">Bookings</p>
+  </div>
+
+  {/* Booking List */}
+  <div className="divide-y divide-gray-200">
+    {dashData.latestAppointments.map((item, index) => (
+      <div
+        key={index}
+        className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-all"
+      >
+        {/* Doctor Image */}
+        <img
+          className="rounded-full w-12 h-12 object-cover shadow-sm"
+          src={item.docData.image}
+          alt={item.docData.name}
+        />
+
+        {/* Booking Info */}
+        <div className="flex-1 text-sm">
+          <p className="text-gray-800 font-semibold">{item.docData.name}</p>
+          <p className="text-gray-500">{slotDateFormat(item.slotDate)}</p>
         </div>
 
-        <div className='pt-4 border border-t-0'>
-          {
-            dashData.latestAppointments.map((item,index)=>(
-              <div className='flex items-center px-6 py-3 gap-3 hover:bg-gray-100' key={index}>
-                <img className='rounded-full w-10' src={item.docData.image} alt="" />
-                <div className='flex-1 text-sm'>
-                  <p className='text-gray-800 font-medium'>{item.docData.name}</p>
-                  <p className='text-gray-600'>{slotDateFormat(item.slotDate)}</p>
-                </div>
-                 {
-                  item.cancelled
-                    ? <p className='text-red-400 text-xs font-medium'>Cancelled</p>
-                    : item.isCompleted
-                      ? <p className='text-green-500 text-xs font-medium'>Completed</p> 
-                      // : <img onClick={()=>cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
-                      :  <p className="text-blue-500 text-xs font-medium">Booked</p>
-
-                    }
-              </div>
-            ))
-          }
-        </div>
+        {/* Status */}
+        {item.cancelled ? (
+          <p className="text-red-500 text-xs font-medium bg-red-100 py-1 px-3 rounded-full">
+            Cancelled
+          </p>
+        ) : item.isCompleted ? (
+          <p className="text-green-500 text-xs font-medium bg-green-100 py-1 px-3 rounded-full">
+            Completed
+          </p>
+        ) : (
+          <p className="text-blue-500 text-xs font-medium bg-blue-100 py-1 px-3 rounded-full">
+            Booked
+          </p>
+        )}
       </div>
+    ))}
+  </div>
+</div>
+
 
     </div>
   )
