@@ -1,8 +1,4 @@
-Here is the **full README.md in clean Markdown code format** — copy-paste directly into your GitHub repo.
-
----
-
-````md
+````markdown
 # Doctorly – Online Doctor Appointment & Healthcare Management Platform
 
 Doctorly is a full-stack healthcare appointment booking system designed to connect patients, doctors, and administrators in one seamless platform. It provides real-time appointment availability, secure payment processing, symptom-based doctor recommendations, and role-based dashboards for patients, doctors, and admins.
@@ -114,31 +110,31 @@ npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 ```
 
----
+-----
 
-## 📸 Snapshots
-
-(Add screenshots of:)
-
-* Login & Registration
-* User Dashboard
-* Doctor Search
-* Appointment Booking
-* Payment Page
-* Doctor Dashboard
-* Admin Dashboard
-
----
 
 ## 🎥 Demo Link
 
-**Video Demo:** https://drive.google.com/file/d/1XIIssZv6WLGVibuDajdeFeNIm5HxrjfD/view?usp=sharing
+[Video Demo](https://drive.google.com/file/d/1XIIssZv6WLGVibuDajdeFeNIm5HxrjfD/view?usp=sharing)
 
----
+-----
 
+## 🔮 Future Enhancements
+
+  - Video consultation integration
+  - AI-based symptom diagnosis
+  - Prescription & reports management
+  - Patient medical history module
+
+-----
 
 ## 🎯 Conclusion
 
 Doctorly is built to enhance healthcare accessibility by offering a smooth, intelligent, and secure appointment booking experience for patients while simplifying management for doctors and administrators.
 
----
+```
+1.  **The "Snapshots" section is lazy.** Leaving a text list saying "(Add screenshots of:)" tells anyone looking at your repo (recruiters, contributors) that you didn't finish the documentation. **Fix it:** Either actually take the screenshots and link them using `![Alt Text](path/to/image.png)`, or delete the section entirely until you have them. Do not leave instructions to yourself in public code.
+2.  **Your "Backend Setup" is incomplete.** You list `dotenv` in the install command, but you provide no instructions on *what* environment variables are needed. A user cannot run your backend without your `.env` configuration (MongoDB URI, Stripe Keys, JWT Secret, etc.). Without a `.env.example` or a list of required variables in this README, your project is "broken by default" for anyone else trying to run it.
+
+Fix those two things if you want this to be taken seriously.
+```
